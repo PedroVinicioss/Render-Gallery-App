@@ -3,10 +3,11 @@ import { View, TextInput, TouchableOpacity, Text, Image, Alert } from 'react-nat
 import { AuthContext } from '../../../context/AuthContext';
 import { useNavigation } from '@react-navigation/native';
 import { useThemedStyles } from "./useThemedStyles";
+import { register } from '../../../services/UsersService';
 import { useTheme } from "../../../ThemeContext";
 import * as ImagePicker from 'expo-image-picker';
-import axios from 'axios';
-
+import { useToast } from "react-native-toast-notifications";
+import { Ionicons } from "@expo/vector-icons";
 export default function Signup() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -17,7 +18,7 @@ export default function Signup() {
   const navigation = useNavigation();
   const styles = useThemedStyles();
   const { themeStyles } = useTheme();
-
+  const toast = useToast();
   const handleLogin = () => {
     navigation.navigate('Login');
   };
@@ -58,7 +59,7 @@ export default function Signup() {
       return;
     }
   
-    try {
+   
       const formData = new FormData();
       formData.append('File', {
         uri: imageUri,
@@ -68,25 +69,34 @@ export default function Signup() {
       formData.append('Nome', name);
       formData.append('Email', email);
       formData.append('Password', password);
-  
-      const response = await axios.post('http://192.168.0.10:5000/api/mobile/register', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
+      
+      const response = await register(formData);
+      console.log(response);
+      if(response.success){
+        toast.show(response.success, {
+          type: "success",
+          placement: "bottom",
+          duration: 2000,
+          offset: 30,
+          animationType: "fade",
+          textStyle: { color: 'white' },
+          backgroundColor: "#FF5722",
+          icon: <Ionicons name="heart-outline" size={24} color="white" />,
       });
-  
-      if (response.status === 200) {
-        console.log("Usuário cadastrado com sucesso:", response.data);
-        // Redirecionar para a tela de login ou realizar o login automaticamente
-        // navigation.navigate('Login');
-      } else {
-        console.error("Erro ao cadastrar usuário:", response.data);
-        Alert.alert('Erro', 'Ocorreu um erro ao cadastrar o usuário. Por favor, tente novamente.');
+        navigation.navigate('Login');
+      }else if(response.error){
+        toast.show(response.error, {
+          type: "warning",
+          placement: "bottom",
+          duration: 2000,
+          offset: 30,
+          animationType: "fade",
+          textStyle: { color: 'white' },
+          backgroundColor: "#FF5722",
+          icon: <Ionicons name="heart-outline" size={24} color="white" />,
+      });
       }
-    } catch (error) {
-      console.error("Erro ao cadastrar usuário:", error.message);
-      Alert.alert('Erro', 'Ocorreu um erro ao cadastrar o usuário. Por favor, tente novamente.');
-    }
+
   };
 
   return (

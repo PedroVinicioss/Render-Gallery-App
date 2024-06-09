@@ -136,7 +136,7 @@ export default function Cart() {
               <Ionicons name="chevron-back" size={24} color="black" />
             </TouchableOpacity>
 
-            <Text style={styles.title}>Checkout</Text>
+            <Text style={styles.title}>Carrinho</Text>
 
             <TouchableOpacity
               onPress={() => navigation.goBack()}
@@ -161,26 +161,25 @@ export default function Cart() {
             )}
           </View>
 
-          {/* <PaymentMethod /> */}
-          <TouchableOpacity
-            onPress={(event) => onOpen(event)}
-            style={styles.buttonIconBack}
-          >
-            <Ionicons name="chevron-back" size={24} color="black" />
-          </TouchableOpacity>
 
           <Modalize ref={modalizeref} snapPoint={500}>
             <View>
             <PaymentMethod />
+            <TouchableOpacity
+              onPress={(event) => onOpen(event)}
+              style={styles.buttonIcon}
+            >
+              <Text style={styles.nameButton}>Pagar</Text>
+            </TouchableOpacity>
             </View>
           </Modalize>
 
           <View style={styles.buttonContainer}>
             <TouchableOpacity
-              onPress={() => setDialogVisible(true)}
+              onPress={(event) => onOpen(event)}
               style={styles.buttonIcon}
             >
-              <Text style={styles.nameButton}>Pagar</Text>
+              <Text style={styles.nameButton}>Checkout</Text>
             </TouchableOpacity>
           </View>
         </View>

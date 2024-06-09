@@ -30,6 +30,22 @@ export async function login(email, password) {
     }
   }
 
+  export async function register(data) {
+    try {
+        const response = await axios.post(`${urlApi}/api/mobile/register`, data, {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          });
+      
+
+          return response.data;
+        } catch (error) {
+          console.error("Erro ao cadastrar usuário:", error.message);
+          Alert.alert('Erro', 'Ocorreu um erro ao cadastrar o usuário. Por favor, tente novamente.');
+        }
+  }
+
 export async function getUsersById(userId){
     try {
         const response = await axios.get(`${urlApi}/api/mobile/Getuser/${userId}`);
