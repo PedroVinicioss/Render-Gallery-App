@@ -25,7 +25,7 @@ const urlApi = API_BASE_URL + "/";
 
 export default function Product({ route }) {
   const { themeStyles } = useTheme();
-  const { Id, Name, Price, Path, CategoriaId, UserId, quantity } = route.params;
+  const { Id, Name, Price, Path, CategoriaId, UserId, quantity, returnScreen } = route.params;
   const [user2, setUser] = useState({});
   const [product, setProduct] = useState({});
   const { user } = useContext(AuthContext);
@@ -44,7 +44,6 @@ export default function Product({ route }) {
   const categoriaName = categoria.name;
   const categoriaId = getCategory(CategoriaId).id;
   const [relatedProducts, setRelatedProducts] = useState([]);
-
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -72,7 +71,14 @@ export default function Product({ route }) {
         userId: user2.id,
         name: user2.name,
         path: user2.path,
-        publicacoes: user2.publicacoes
+        publicacoes: user2.publicacoes,
+        publicacaoId: Id,
+        publicacaoName: Name,
+        publicacaoPrice: Price,
+        publicacaoPath: Path,
+        publicacaoCategoriaId: CategoriaId,
+        publicacaoUserId: UserId,
+        publicacaoQuantity: quantity,
       });
     }
   };
@@ -109,8 +115,19 @@ export default function Product({ route }) {
     );
   }
 
-    function onAddToCart() {
-      addItemToCart(Id ,quantity2);
+  function onAddToCart() {
+    if (quantity < 1) {
+      toast.show("Produto fora de estoque!", {
+        type: "warning",
+        placement: "bottom",
+        duration: 2000,
+        offset: 30,
+        animationType: "fade",
+        textStyle: { color: 'white' },
+        backgroundColor: "#FF5722",
+      });
+    } else {
+      addItemToCart(Id, quantity2);
       toast.show("Arte adicionada ao carrinho com sucesso!", {
         type: "success",
         placement: "bottom",
@@ -121,8 +138,9 @@ export default function Product({ route }) {
         backgroundColor: "#388E3C", 
         icon: <Ionicons name="cart-outline" size={24} color="white" />, 
       });
-      setDialogVisible(false);
     }
+    setDialogVisible(false);
+  }  
     
     function onAddToFav() {
       addItemToFav(Id);
@@ -142,6 +160,15 @@ export default function Product({ route }) {
         setIcon('heart-outline');
       }
     }
+
+    function Back() {
+      if(route.params?.returnScreen == 'MyProfile'){
+        navigation.navigate('MyProfile');
+      } else {
+          navigation.goBack();
+      }
+  }
+
     const decreaseQuantity = () => {
       if (quantity2 > 1) {
         setQuantity(quantity2 - 1);
@@ -155,7 +182,7 @@ export default function Product({ route }) {
   
   return (
     <SafeAreaView style={styles.background}> 
-        <TouchableOpacity onPress={() => navigation.goBack()}  style={styles.buttonIconBack}>
+        <TouchableOpacity onPress={() => Back()}  style={styles.buttonIconBack}>
             <Ionicons  name="chevron-back" size={24} color="black" />
         </TouchableOpacity>
       <ScrollView nestedScrollEnabled = {true}>
@@ -164,9 +191,13 @@ export default function Product({ route }) {
             style={[styles.image]} 
             source={{ uri: Path }}
           />
-          <TouchableOpacity onPress={() => onAddToFav() }  style={styles.buttonIconFav}>
-                <Ionicons name={icon} size={24} color="#F13658" />
-          </TouchableOpacity>
+          {isCurrentUser ? null : (
+            <>
+            <TouchableOpacity onPress={() => onAddToFav() }  style={styles.buttonIconFav}>
+                  <Ionicons name={icon} size={24} color="#F13658" />
+            </TouchableOpacity>
+            </>
+          )}
         </View>
         
         <View style={styles.infoContainer}>
@@ -246,7 +277,7 @@ export default function Product({ route }) {
                   name={relatedProduct.name}
                   path={relatedProduct.path}
                   price={relatedProduct.price}
-                  user={relatedProduct.user}
+                  userId={relatedProduct.userId}
                   categoriaId={relatedProduct.categoriaId}
                   style={styles.relatedItem}
                 />
@@ -256,12 +287,18 @@ export default function Product({ route }) {
         </View>
 
       </ScrollView>
-      <TouchableOpacity onPress={() => setDialogVisible(true)}style={styles.buttonIcon}>
-       <Ionicons name={quantity > 0 ? 'cart-outline' : ''}  size={24} color="white" />
-        <Text style={styles.nameButton}>
-        {quantity < 1 ? 'Fora de Estoque':`Adicionar ao carrinho | ${Price ? Price.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) : 'Preço não disponível'}`}  
-        </Text>
-      </TouchableOpacity>
+
+        {isCurrentUser ? null : (
+          <>
+            <TouchableOpacity onPress={() => setDialogVisible(true)} style={styles.buttonIcon}>
+              <Ionicons name={quantity > 0 ? 'cart-outline' : ''} size={24} color="white" />
+              <Text style={styles.nameButton}>
+                {quantity < 1 ? 'Fora de Estoque' : `Adicionar ao carrinho | ${Price ? Price.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) : 'Preço não disponível'}`}  
+              </Text>
+            </TouchableOpacity>
+          </>
+        )}
+
     </SafeAreaView>
   );
 }

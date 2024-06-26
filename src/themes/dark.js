@@ -5,7 +5,8 @@ export default {
 
         textPrimary: "#EDEDED",
         textSecondary: "#A4AAAD",
-        
+        textPrimaryButton: "#EDEDED",
+
         backgroundCategory: "#0057A8",
         backgroundCategorySelected: "#FFFFFF",
         textCategory: "#FFFFFF",
@@ -17,6 +18,7 @@ export default {
         textSecondaryBarraPerfil: "#EDEDED",
 
         button:"#0057A8",
+        buttonSair:"red",
         borderSearch: "#878787",
         tabBar:"#141414",
         preto: "#141414",

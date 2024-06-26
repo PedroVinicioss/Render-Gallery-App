@@ -9,18 +9,24 @@ import { AntDesign } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faThumbsUp } from '@fortawesome/free-solid-svg-icons';
+import { AuthContext } from "../../context/AuthContext";
 
 import { useThemedStyles } from "./userThemedStyles";
 
 
-export function Post({ id, name, user, price, path, height, width, categoriaId, quantidade }) {
+export function Post({ id, name, userId, price, path, height, width, categoriaId, quantidade, returnScreen  }) {
     const styles = useThemedStyles(); 
     const toast = useToast();
     const { getFavItem, addItemToFav } = useContext(FavContext);
     const [aspectRatio, setAspectRatio] = useState(1);
     let [icon, setIcon] = useState('heart-outline');
     const navigation = useNavigation();
-    const [isReady, setIsReady] = useState(false); 
+    const [isReady, setIsReady] = useState(false);
+    const { user } = useContext(AuthContext);
+    let isCurrentUser = false;
+    if(user){
+       isCurrentUser = user.id === userId
+    }
 
     useEffect(() => {
         if (!height || !width) {
@@ -68,15 +74,19 @@ export function Post({ id, name, user, price, path, height, width, categoriaId, 
     }
 
     return (
-        <TouchableOpacity style={styles.container} onPress={() => navigation.navigate('Product', { Id: id, Name: name, Price: price, Path: path, UserId: user, CategoriaId: categoriaId, quantity:quantidade })}>
+        <TouchableOpacity style={styles.container} onPress={() => navigation.navigate('Product', { Id: id, Name: name, Price: price, Path: path, UserId: userId, CategoriaId: categoriaId, quantity: quantidade, returnScreen: returnScreen })}>
             <Image source={{ uri: path }} style={[styles.image, { height: height, width: width, aspectRatio: height && width ? undefined : aspectRatio }]} />
             
 
             <View style={styles.footer}>
                 <Text style={styles.title}>{name}</Text>
-                <TouchableOpacity onPress={onAddToFav} style={styles.buttonIconFav}>
-                    <Ionicons name={icon} style={styles.fav} />
-                </TouchableOpacity>
+                {isCurrentUser ? null : (
+                    <>
+                    <TouchableOpacity onPress={() => onAddToFav() }  style={styles.buttonIconFav}>
+                        <Ionicons name={icon} size={24} color="#F13658" />
+                    </TouchableOpacity>
+                    </>
+                )}
             </View>
             {/* <View style={styles.infoContainer}>
                 <Text style={styles.user}><Ionicons name="person-outline" style={styles.person} /> {user2.name}</Text>

@@ -7,6 +7,7 @@ export default {
         
         textPrimary: "#1B2028",
         textSecondary: "#A4AAAD",
+        textPrimaryButton: "#ededed",
 
         backgroundCategory: "#FFFFFF",
         backgroundCategorySelected: "#00406A",
@@ -19,6 +20,7 @@ export default {
         textSecondaryBarraPerfil: "#00406A",
 
         button:"#00406A",
+        buttonSair:"red",
         borderSearch: "#00406A",
         tabBar:"#292526",
         preto: "#141414",

@@ -8,6 +8,7 @@ export const useThemedStyles = () => {
         container: {
             flex: 1,
             backgroundColor: themeStyles.colors.background,
+            paddingBottom: 60,
         },
         flatListContainer: {
             height: 'auto',

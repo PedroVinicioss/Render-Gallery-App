@@ -1,10 +1,23 @@
 {
   "expo": {
     "name": "Render Gallery App",
-    "slug": "Render Gallery App",
+    "slug": "rendergalleryapp",
     "version": "1.0.0",
     "orientation": "default",
     "icon": "./assets/icon.png",
+    "notification": {
+      "icon": "./assets/System/logo.png", 
+      "color": "#00406A",
+      "androidMode": "default",
+      "androidCollapsedTitle": "Render Gallery App",
+      "androidCollapsedBody": "You have $notifCount new notifications. Tap to see them.",
+      "androidShowWhenInForeground": true
+    },
+    "extra": {
+      "eas": {
+        "projectId": "324ffd8c-1ed4-4a97-b325-e85bda555b82"
+      }
+    },
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -23,10 +36,12 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "useNextNotificationsApi": true
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "owner": "pedrovinicioss"
   }
 }

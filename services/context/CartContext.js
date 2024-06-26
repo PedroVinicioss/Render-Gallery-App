@@ -24,6 +24,16 @@ export function CartProvider(props) {
     }
   }
 
+  async function removeItemFromCart(itemId) {
+    try {
+      await removeItemToCartService(user.id, itemId);
+      const updatedItems = items.filter(item => item.id !== itemId);
+      setItems(updatedItems);
+    } catch (error) {
+      console.error('Erro ao remover item do carrinho:', error);
+    }
+  }
+
   function getItemsCount() {
     return items.reduce((sum, item) => sum + item.quantidade, 0);
   }
@@ -34,7 +44,7 @@ export function CartProvider(props) {
 
   return (
     <CartContext.Provider
-      value={{ items, setItems, getItemsCount, addItemToCart, getTotalPrice }}
+      value={{ items, setItems, getItemsCount, addItemToCart, getTotalPrice, removeItemFromCart }}
     >
       {props.children}
     </CartContext.Provider>

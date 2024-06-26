@@ -33,6 +33,14 @@ export default function Home({route}) {
 
     useEffect(() => {
         fetchProducts(selectedCategory, searchText); 
+
+        // Chamada inicial e posteriormente a cada 10 segundos
+        const intervalId = setInterval(() => {
+            fetchProducts(selectedCategory, searchText);
+        }, 10000);
+
+        // Limpando o intervalo quando o componente é desmontado
+        return () => clearInterval(intervalId);
     }, []);
 
     async function fetchProducts(categoryId, searchText) {
